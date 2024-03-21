@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Memory Game</title>
+
+    <style>
+    	h1{
+    		text-align : center;
+    	}
+    	#jeu{
+    		background: black;
+    		width: 400px;
+    		
+    		margin: auto;
+    		padding: 20px;
+    	}
+	   img{
+		cursor:pointer;
+	      }
+    </style>
+</head>
+<body>
+ <h1>Memory Game</h1>
+ <div id="jeu">
+ <table id="tapis">
+<tr>
+	<td ><img src="IMG/P0.png" style='width:100px; hight:100px'/></td>
+	<td ><img src="IMG/P0.png" style='width:100px; hight:100px'/></td>
+	<td ><img src="IMG/P0.png" style='width:100px; hight:100px'/></td>
+	<td ><img src="IMG/P0.png" style='width:100px; hight:100px'/></td>
+	
+	
+</tr>
+<tr>
+	<td  ><img src="IMG/P0.png" style='width:100px; hight:100px'/></td>
+	<td  ><img src="IMG/P0.png" style='width:100px; hight:100px'/></td>
+	<td ><img src="IMG/P0.png" style='width:100px; hight:100px'/></td>
+	<td  ><img src="IMG/P0.png" style='width:100px; hight:100px'/></td>
+	
+</tr>
+<tr>
+	<td ><img src="IMG/P0.png" style='width:100px; hight:100px'/></td>
+	<td ><img src="IMG/P0.png" style='width:100px; hight:100px'/></td>
+	<td ><img src="IMG/P0.png" style='width:100px; hight:100px'/></td>
+	<td  ><img src="IMG/P0.png" style='width:100px; hight:100px'/></td>
+	
+</tr>
+<tr>
+	<td ><img src="IMG/P0.png" style='width:100px; hight:100px'/></td>
+	<td ><img src="IMG/P0.png" style='width:100px; hight:100px'/></td>
+	<td ><img src="IMG/P0.png" style='width:100px; hight:100px'/></td>
+	<td ><img src="IMG/P0.png" style='width:100px; hight:100px'/></td>
+	
+</tr>
+</table>
+</div>
+<script type="text/javascript">
+  	var T=[1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8];
+	var etatsImg=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+	var imgRetournees=[];
+	var nbPairesTrouvees=0;
+	var imgs=document.getElementById("tapis").getElementsByTagName("img");
+	for(var i=0;i<imgs.length;i++){
+	imgs[i].noImg=i; //Ajout de la propriété noCarte à l'objet img
+	imgs[i].onclick=function(){
+		Jeu(this.noImg);
+	    } 
+    }
+	Mélanger();
+	function majAffichage(noImg){
+	switch(etatsImg[noImg]){
+		case 0:
+			imgs[noImg].src="IMG/P0.png";
+			break;
+		case 1:
+			imgs[noImg].src="IMG/P"+T[noImg]+".jpg";
+			break;
+		case -1:
+			imgs[noImg].style.visibility="hidden";
+			break;
+	    }
+    }
+	function rejouer(){
+	alert("Bravo !");
+	location.reload();
+    }
+    function Mélanger(){
+	for(var position=T.length-1; position>=1; position--){
+		var hasard=Math.floor(Math.random()*(position+1));
+		var sauve=T[position];
+		T[position]=T[hasard];
+		T[hasard]=sauve;
+	    }
+    }
+    function Jeu(noImg){
+       if(imgRetournees.length<2){   
+       		if(etatsImg[noImg]==0){
+			etatsImg[noImg]=1;
+			imgRetournees.push(noImg);
+			majAffichage(noImg);
+		} 
+				if(imgRetournees.length==2){
+			var nouveauEtat=0;
+			if(T[imgRetournees[0]]==T[imgRetournees[1]]){
+				nouveauEtat=-1;
+				nbPairesTrouvees++;
+			}
+
+			etatsImg[imgRetournees[0]]=nouveauEtat;
+			etatsImg[imgRetournees[1]]=nouveauEtat;
+          			setTimeout(function(){
+				majAffichage(imgRetournees[0]);
+				majAffichage(imgRetournees[1]);
+				imgRetournees=[];
+				if(nbPairesTrouvees==8){
+					rejouer();
+				}
+			},720);
+		}
+	}
+}
+
+</script>
+
+
+</body>
+</html>
